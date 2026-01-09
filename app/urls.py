@@ -1,24 +1,18 @@
 from django.urls import path, include
-from django.contrib import admin
-from .views import (
-    car_list_create,
-    car_detail,
-    CarListCreateAPIView,
-    CarRetrieveUpdateDestroyAPIView
-)
+from rest_framework.routers import DefaultRouter
+
+from .views import ProductViewSet, ProductListByChildCategorySlugAPIView
+
+
+router = DefaultRouter()
+router.register(r"products", ProductViewSet, basename="product")
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('cars.urls')),
-]
+    path("", include(router.urls)),
 
-
-urlpatterns = [
-    # FBV
-    path('fbv/cars/', car_list_create),
-    path('fbv/cars/<int:pk>/', car_detail),
-
-    # CBV
-    path('cbv/cars/', CarListCreateAPIView.as_view()),
-    path('cbv/cars/<int:pk>/', CarRetrieveUpdateDestroyAPIView.as_view()),
+    path(
+        "products/by-child-category/<slug:slug>/",
+        ProductListByChildCategorySlugAPIView.as_view(),
+        name="product-list-by-child-category-slug",
+    ),
 ]
