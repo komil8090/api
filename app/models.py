@@ -12,12 +12,16 @@ class Category(models.Model):
         null=True,
         blank=True,
         related_name='children'
-
     )
+
+    class Meta:
+        ordering = ['name']
+        unique_together = ('parent', 'slug')
+        verbose_name = 'Category'
+        verbose_name_plural = 'Categories'
 
     def __str__(self):
         return self.name
-    
 
 
 class Product(models.Model):
@@ -32,9 +36,11 @@ class Product(models.Model):
         related_name='products'
     )
 
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
-    created_at = models.DateField(auto_now_add=True)
-    updated_at = models.DateField(auto_now=True)
+    class Meta:
+        ordering = ['-created_at']
 
     def __str__(self):
         return self.title
