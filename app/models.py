@@ -1,7 +1,5 @@
 from django.db import models
 
-# Create your models here.
-
 
 class Category(models.Model):
     name = models.CharField(max_length=155)
@@ -44,3 +42,18 @@ class Product(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Image(models.Model):
+    product = models.ForeignKey(
+        Product,
+        related_name='images',
+        on_delete=models.CASCADE
+    )
+    image = models.ImageField(upload_to='products/')
+
+    def __str__(self):
+        return f"Image of {self.product.title}"
+
+
+
