@@ -6,6 +6,7 @@ from .serializers import ProductSerializer
 
 
 
+
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all().select_related('category')
     serializer_class = ProductSerializer
@@ -27,3 +28,27 @@ class ProductListByChildCategorySlugAPIView(generics.ListAPIView):
             category__parent__isnull=False,
         
         ).select_related('category')
+
+
+
+# models.py
+from django.db import models
+
+class Category(models.Model):
+    name = models.CharField(max_length=100)
+
+class Product(models.Model):
+    name = models.CharField(max_length=100)
+    category = models.ForeignKey(
+        Category,
+        related_name='products',
+        on_delete=models.CASCADE
+    )
+
+class Image(models.Model):
+    product = models.ForeignKey(
+        Product,
+        related_name='images',
+        on_delete=models.CASCADE
+    )
+    image = models.ImageField(upload_to='products/')
